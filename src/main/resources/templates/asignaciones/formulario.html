@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Asignación - Sabor Gourmet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h4><i class="fas fa-link"></i> Nueva Asignación de Mesa</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Selector de Tipo de Asignación -->
+                    <ul class="nav nav-tabs mb-4" id="tipoTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="ocupacion-tab" data-bs-toggle="tab"
+                                    data-bs-target="#ocupacion" type="button">
+                                <i class="fas fa-users"></i> Ocupar Mesa
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="reserva-tab" data-bs-toggle="tab"
+                                    data-bs-target="#reserva" type="button">
+                                <i class="fas fa-bookmark"></i> Reservar Mesa
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="tipoTabContent">
+                        <!-- Formulario de Ocupación -->
+                        <div class="tab-pane fade show active" id="ocupacion">
+                            <form th:action="@{/asignaciones/asignar}" method="post">
+                                <div class="mb-3">
+                                    <label for="clienteOcupacion" class="form-label">Seleccionar Cliente *</label>
+                                    <select class="form-select" id="clienteOcupacion" name="idCliente" required>
+                                        <option value="">-- Seleccione un cliente --</option>
+                                        <option th:each="cliente : ${clientes}"
+                                                th:value="${cliente.idCliente}"
+                                                th:text="${cliente.nombres + ' ' + cliente.apellidos + ' (DNI: ' + cliente.dni + ')'}">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="mesaOcupacion" class="form-label">Seleccionar Mesa *</label>
+                                    <select class="form-select" id="mesaOcupacion" name="idMesa" required>
+                                        <option value="">-- Seleccione una mesa --</option>
+                                        <option th:each="mesa : ${mesas}"
+                                                th:value="${mesa.idMesa}"
+                                                th:text="'Mesa ' + ${mesa.numero} + ' - Capacidad: ' + ${mesa.capacidad} + ' personas'">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="observacionesOcupacion" class="form-label">Observaciones</label>
+                                    <textarea class="form-control" id="observacionesOcupacion" name="observaciones"
+                                              rows="3" placeholder="Ej: Pedido especial, alergias, etc."></textarea>
+                                </div>
+
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i>
+                                    <strong>Ocupación:</strong> El cliente se sentará inmediatamente en la mesa seleccionada.
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-danger btn-lg">
+                                        <i class="fas fa-users"></i> Ocupar Mesa
+                                    </button>
+                                    <a href="/asignaciones" class="btn btn-secondary">Cancelar</a>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Formulario de Reserva -->
+                        <div class="tab-pane fade" id="reserva">
+                            <form th:action="@{/asignaciones/reservar}" method="post">
+                                <div class="mb-3">
+                                    <label for="clienteReserva" class="form-label">Seleccionar Cliente *</label>
+                                    <select class="form-select" id="clienteReserva" name="idCliente" required>
+                                        <option value="">-- Seleccione un cliente --</option>
+                                        <option th:each="cliente : ${clientes}"
+                                                th:value="${cliente.idCliente}"
+                                                th:text="${cliente.nombres + ' ' + cliente.apellidos + ' (DNI: ' + cliente.dni + ')'}">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="mesaReserva" class="form-label">Seleccionar Mesa *</label>
+                                    <select class="form-select" id="mesaReserva" name="idMesa" required>
+                                        <option value="">-- Seleccione una mesa --</option>
+                                        <option th:each="mesa : ${mesas}"
+                                                th:value="${mesa.idMesa}"
+                                                th:text="'Mesa ' + ${mesa.numero} + ' - Capacidad: ' + ${mesa.capacidad} + ' personas'">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="observacionesReserva" class="form-label">Observaciones</label>
+                                    <textarea class="form-control" id="observacionesReserva" name="observaciones"
+                                              rows="3" placeholder="Ej: Hora de la reserva, ocasión especial, etc."></textarea>
+                                </div>
+
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <strong>Reserva:</strong> La mesa quedará reservada para este cliente.
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-warning btn-lg">
+                                        <i class="fas fa-bookmark"></i> Reservar Mesa
+                                    </button>
+                                    <a href="/asignaciones" class="btn btn-secondary">Cancelar</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

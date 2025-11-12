@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignaciones de Mesas - Sabor Gourmet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/dashboard">🍽️ Sabor Gourmet</a>
+        <div class="d-flex">
+            <span class="navbar-text me-3" sec:authentication="name">Usuario</span>
+            <form th:action="@{/logout}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-outline-light btn-sm">Cerrar Sesión</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h4><i class="fas fa-link"></i> Asignaciones Activas de Mesas</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Mensajes -->
+                    <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show">
+                        <span th:text="${mensaje}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+                        <span th:text="${error}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="mb-3">
+                        <a href="/asignaciones/nueva" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Nueva Asignación
+                        </a>
+                        <a href="/asignaciones/historial" class="btn btn-secondary">
+                            <i class="fas fa-history"></i> Ver Historial
+                        </a>
+                        <a href="/dashboard" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Volver al Dashboard
+                        </a>
+                    </div>
+
+                    <!-- Tabla de asignaciones -->
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Mesa</th>
+                                <th>Tipo</th>
+                                <th>Fecha Asignación</th>
+                                <th>Observaciones</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="asignacion : ${asignaciones}">
+                                <td th:text="${asignacion.idAsignacion}"></td>
+                                <td>
+                                    <strong th:text="${asignacion.cliente.nombres + ' ' + asignacion.cliente.apellidos}"></strong>
+                                    <br>
+                                    <small class="text-muted">DNI: <span th:text="${asignacion.cliente.dni}"></span></small>
+                                </td>
+                                <td>
+                                    <strong th:text="'Mesa ' + ${asignacion.mesa.numero}"></strong>
+                                    <br>
+                                    <small class="text-muted">
+                                        <i class="fas fa-users"></i>
+                                        <span th:text="${asignacion.mesa.capacidad} + ' personas'"></span>
+                                    </small>
+                                </td>
+                                <td>
+                                            <span th:if="${asignacion.tipo.name() == 'OCUPACION'}"
+                                                  class="badge bg-danger">OCUPACIÓN</span>
+                                    <span th:if="${asignacion.tipo.name() == 'RESERVA'}"
+                                          class="badge bg-warning">RESERVA</span>
+                                </td>
+                                <td th:text="${#temporals.format(asignacion.fechaAsignacion, 'dd/MM/yyyy HH:mm')}"></td>
+                                <td><small th:text="${asignacion.observaciones ?: '-'}"></small></td>
+                                <td>
+                                    <span th:if="${asignacion.activa}" class="badge bg-success">ACTIVA</span>
+                                    <span th:unless="${asignacion.activa}" class="badge bg-secondary">FINALIZADA</span>
+                                </td>
+                                <td>
+                                    <a th:if="${asignacion.activa}"
+                                       th:href="@{/asignaciones/liberar/{id}(id=${asignacion.idAsignacion})}"
+                                       class="btn btn-primary btn-sm"
+                                       onclick="return confirm('¿Desea liberar esta mesa?')">
+                                        <i class="fas fa-check-circle"></i> Liberar Mesa
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(asignaciones)}">
+                                <td colspan="8" class="text-center text-muted">
+                                    <i class="fas fa-info-circle"></i> No hay asignaciones activas
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

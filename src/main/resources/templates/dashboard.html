@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sabor Gourmet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card-dashboard {
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+        }
+        .card-dashboard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/dashboard">
+            <i class="fas fa-utensils"></i> Sabor Gourmet
+        </a>
+        <div class="d-flex align-items-center">
+                <span class="navbar-text text-white me-3">
+                    <i class="fas fa-user"></i> <span sec:authentication="name">Usuario</span>
+                </span>
+            <span class="badge bg-primary me-3" sec:authentication="authorities">Rol</span>
+            <form th:action="@{/logout}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="text-center mb-5">
+        <h1 class="display-4">🍽️ Sistema de Gestión de Restaurante</h1>
+        <p class="lead">Bienvenido al Panel de Control de Sabor Gourmet</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Clientes - ADMIN y MOZO -->
+        <div class="col-md-4" sec:authorize="hasAnyRole('ADMIN', 'MOZO')">
+            <div class="card card-dashboard text-center">
+                <div class="card-body">
+                    <div class="card-icon text-primary">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h5 class="card-title">Gestión de Clientes</h5>
+                    <p class="card-text">Administrar información de clientes</p>
+                    <a href="/clientes" class="btn btn-primary">
+                        <i class="fas fa-arrow-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mesas - ADMIN y MOZO -->
+        <div class="col-md-4" sec:authorize="hasAnyRole('ADMIN', 'MOZO')">
+            <div class="card card-dashboard text-center">
+                <div class="card-body">
+                    <div class="card-icon text-success">
+                        <i class="fas fa-table"></i>
+                    </div>
+                    <h5 class="card-title">Gestión de Mesas</h5>
+                    <p class="card-text">Control de mesas y disponibilidad</p>
+                    <a href="/mesas" class="btn btn-success">
+                        <i class="fas fa-arrow-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Asignaciones - ADMIN y MOZO -->
+        <div class="col-md-4" sec:authorize="hasAnyRole('ADMIN', 'MOZO')">
+            <div class="card card-dashboard text-center">
+                <div class="card-body">
+                    <div class="card-icon text-info">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <h5 class="card-title">Asignación de Mesas</h5>
+                    <p class="card-text">Asignar clientes a mesas</p>
+                    <a href="/asignaciones" class="btn btn-info">
+                        <i class="fas fa-arrow-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pedidos - ADMIN, MOZO y COCINERO -->
+        <div class="col-md-4" sec:authorize="hasAnyRole('ADMIN', 'MOZO', 'COCINERO')">
+            <div class="card card-dashboard text-center">
+                <div class="card-body">
+                    <div class="card-icon text-warning">
+                        <i class="fas fa-receipt"></i>
+                    </div>
+                    <h5 class="card-title">Gestión de Pedidos</h5>
+                    <p class="card-text">Tomar y gestionar pedidos</p>
+                    <a href="/pedidos" class="btn btn-warning">
+                        <i class="fas fa-arrow-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ventas - ADMIN y CAJERO -->
+        <div class="col-md-4" sec:authorize="hasAnyRole('ADMIN', 'CAJERO')">
+            <div class="card card-dashboard text-center">
+                <div class="card-body">
+                    <div class="card-icon text-danger">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <h5 class="card-title">Ventas y Facturación</h5>
+                    <p class="card-text">Procesar pagos y generar facturas</p>
+                    <a href="/ventas" class="btn btn-danger">
+                        <i class="fas fa-arrow-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auditoría - Solo ADMIN -->
+        <div class="col-md-4" sec:authorize="hasRole('ADMIN')">
+            <div class="card card-dashboard text-center">
+                <div class="card-body">
+                    <div class="card-icon text-dark">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h5 class="card-title">Auditoría</h5>
+                    <p class="card-text">Registro de operaciones del sistema</p>
+                    <a href="/auditoria" class="btn btn-dark">
+                        <i class="fas fa-arrow-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventario - Solo ADMIN -->
+        <div class="col-md-4" sec:authorize="hasRole('ADMIN')">
+            <div class="card card-dashboard text-center">
+                <div class="card-body">
+                    <div class="card-icon text-secondary">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <h5 class="card-title">Inventario</h5>
+                    <p class="card-text">Control de stock e insumos</p>
+                    <a href="/inventario" class="btn btn-secondary">
+                        <i class="fas fa-arrow-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- APIs REST - Solo visible, no funcional aún -->
+        <div class="col-md-12 mt-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5><i class="fas fa-code"></i> APIs REST Disponibles</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3" sec:authorize="hasAnyRole('ADMIN', 'MOZO')">
+                            <h6>Clientes:</h6>
+                            <ul class="list-unstyled small">
+                                <li><a href="/api/clientes" target="_blank">GET /api/clientes</a></li>
+                                <li><a href="/api/clientes/activos" target="_blank">GET /api/clientes/activos</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3" sec:authorize="hasAnyRole('ADMIN', 'MOZO')">
+                            <h6>Mesas:</h6>
+                            <ul class="list-unstyled small">
+                                <li><a href="/api/mesas" target="_blank">GET /api/mesas</a></li>
+                                <li><a href="/api/mesas/disponibles" target="_blank">GET /api/mesas/disponibles</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3" sec:authorize="hasAnyRole('ADMIN', 'MOZO')">
+                            <h6>Asignaciones:</h6>
+                            <ul class="list-unstyled small">
+                                <li><a href="/api/asignaciones" target="_blank">GET /api/asignaciones</a></li>
+                                <li><a href="/api/asignaciones/activas" target="_blank">GET /api/asignaciones/activas</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3" sec:authorize="hasRole('ADMIN')">
+                            <h6>Auditoría:</h6>
+                            <ul class="list-unstyled small">
+                                <li><a href="/api/auditoria" target="_blank">GET /api/auditoria</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
