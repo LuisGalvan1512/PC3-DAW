@@ -30,8 +30,6 @@ Sistema que permite:
 ### 1. Crear base de datos
 CREATE DATABASE sabor_gourmet;
 
-text
-
 ### 2. Configurar `application.properties`
 spring.datasource.url=jdbc:mysql://localhost:3306/sabor_gourmet
 spring.datasource.username=root
@@ -39,17 +37,11 @@ spring.datasource.password=
 
 spring.jpa.hibernate.ddl-auto=update
 
-text
-
 ### 3. Ejecutar
 mvn spring-boot:run
 
-text
-
 ### 4. Acceder
 http://localhost:8080
-
-text
 
 ---
 
@@ -102,22 +94,16 @@ POST /api/clientes Crear
 PUT /api/clientes/{id} Actualizar
 DELETE /api/clientes/{id} Eliminar
 
-text
-
 ### Mesas
 GET /api/mesas Listar todas
 GET /api/mesas/disponibles Solo disponibles
 POST /api/mesas Crear
 PUT /api/mesas/{id} Actualizar
 
-text
-
 ### Asignaciones
 GET /api/asignaciones/activas Ver activas
 POST /api/asignaciones/asignar Asignar mesa
 PUT /api/asignaciones/liberar/{id} Liberar
-
-text
 
 ---
 
@@ -148,7 +134,6 @@ src/main/resources/
 │ └── auditoria/
 └── application.properties
 
-text
 
 ---
 
